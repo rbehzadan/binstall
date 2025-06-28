@@ -1,55 +1,73 @@
 # k6
 
-[k6](https://github.com/grafana/k6) is a modern open-source load testing tool built for developers, testers, and SREs.
+[k6](https://github.com/grafana/k6) is an open-source modern load testing tool built for developers and testers.
 
-## 🔧 Install
+---
 
-### Option 1: One-liner
+## 🔧 Installation Methods
 
-Run this in your terminal:
+You can install `k6` in two ways:
+
+### ✅ Option 1: Smart Installer Script
+
+This script auto-detects your platform and downloads the correct binary.
+
+#### Usage
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/install.sh | bash
-````
+```
 
-### Option 2: Manual Copy & Paste
+#### Available Flags
 
-If you prefer to review the script before running it, copy and paste the following:
+* `--version <ver>`: Install a specific version (e.g. `--version 0.48.0`)
+* `--quiet`: Suppress verbose output (only shows final result)
+* `--help`: Show usage
+
+Example:
 
 ```bash
-REPO_OWNER="grafana"
-REPO_NAME="k6"
-BINARY="k6"
-GIT_SERVER="github.com"
-REPO_URL="https://${GIT_SERVER}/${REPO_OWNER}/${REPO_NAME}"
-
-# Detect OS and architecture
-OS=$(uname | tr '[:upper:]' '[:lower:]')  # linux, darwin
-ARCH=$(uname -m)
-case "$ARCH" in
-  x86_64) ARCH="amd64" ;;
-  aarch64 | arm64) ARCH="arm64" ;;
-  armv6l | armv7l) ARCH="armv6" ;;  # fallback
-  *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
-esac
-
-# Fetch latest version
-VERSION=$(curl -s https://api.${GIT_SERVER}/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
-  | jq -r ".tag_name" | sed 's/^v//')
-
-# Download and install
-DIRNAME="${BINARY}-v${VERSION}-${OS}-${ARCH}"
-PACKAGE="${DIRNAME}.tar.gz"
-CWD=$(pwd)
-TEMPDIR=$(mktemp -d)
-cd "$TEMPDIR"
-curl -fsSLO "${REPO_URL}/releases/download/v${VERSION}/${PACKAGE}"
-tar xf "${PACKAGE}"
-cd "${DIRNAME}"
-sudo install "${BINARY}" /usr/local/bin
-cd "$CWD"
-rm -rf "$TEMPDIR"
-
-# Confirm installation
-echo -e "\nInstalled $BINARY version: $($BINARY --version | cut -d' ' -f2)"
+curl -fsSL https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/install.sh | bash -s -- --version 0.47.0
 ```
+
+---
+
+### ✅ Option 2: Hardcoded Variant Snippets
+
+These are copy-paste-friendly, minimal install snippets that **do not rely on auto-detection**.
+Ideal for CI, Docker, or minimal systems.
+
+> 📁 Located in: [`k6/variants/`](./variants/)
+
+Available variants:
+
+* [`install-k6-linux-amd64`](./variants/install-k6-linux-amd64)
+* [`install-k6-linux-arm64`](./variants/install-k6-linux-arm64)
+* [`install-k6-darwin-amd64`](./variants/install-k6-darwin-amd64)
+* [`install-k6-darwin-arm64`](./variants/install-k6-darwin-arm64)
+
+#### Example usage:
+
+```bash
+bash < k6/variants/install-k6-linux-amd64
+```
+
+Or copy the file contents and paste directly into your terminal.
+
+---
+
+## 📦 Installed Output
+
+After installation, the script prints:
+
+```bash
+✅ Installed k6 version: v0.48.0
+```
+
+---
+
+## 🔐 Notes
+
+* The script requires `sudo` to place the binary in `/usr/local/bin`
+* You must have `curl`, `tar`, `jq`, and `install` on your system
+
