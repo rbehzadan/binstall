@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # Install latest version of Grafana K6 from GitHub releases
-# Usage: copy & paste into your terminal
 
 # Tool metadata
 REPO_OWNER="grafana"
@@ -44,5 +43,5 @@ cd "$CWD"
 rm -rf "$TEMPDIR"
 
 # Report installed version
-echo -e "\n\nInstalled $BINARY version: $($BINARY --version | cut -d' ' -f2)"
+echo -e "Installed $BINARY version: $($BINARY --version | cut -d' ' -f2)"
 
