@@ -88,8 +88,11 @@ trap cleanup EXIT
 # === Download & install ===
 cd "$TEMPDIR"
 say "⬇️ Downloading $PACKAGE..."
-curl -fsSLO "${REPO_URL}/releases/download/v${TOOL_VERSION}/${PACKAGE}" \
-  || { err "Download failed."; exit 1; }
+if $QUIET; then
+  curl -fsSLO "${REPO_URL}/releases/download/v${TOOL_VERSION}/${PACKAGE}"
+else
+  curl -fSLO "${REPO_URL}/releases/download/v${TOOL_VERSION}/${PACKAGE}"
+fi
 
 say "📦 Extracting..."
 $QUIET && TAR_FLAGS="xf" || TAR_FLAGS="xvf"
