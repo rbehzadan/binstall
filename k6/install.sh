@@ -93,7 +93,11 @@ curl -fsSLO "${REPO_URL}/releases/download/v${TOOL_VERSION}/${PACKAGE}" \
 
 say "📦 Extracting..."
 $QUIET && TAR_FLAGS="xf" || TAR_FLAGS="xvf"
-cd "$DIRNAME"
+tar $TAR_FLAGS "$PACKAGE"
+if [[ -d "$DIRNAME" ]]; then
+  cd "$DIRNAME"
+fi
+[[ -f "$BINARY" ]] || { err "Binary '$BINARY' not found after extraction."; exit 1; }
 
 say "🔧 Installing $BINARY to /usr/local/bin..."
 sudo install "$BINARY" /usr/local/bin
