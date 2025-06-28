@@ -1,47 +1,104 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# Install latest version of Grafana K6 from GitHub releases
-
-# Tool metadata
+# === Config ===
 REPO_OWNER="grafana"
 REPO_NAME="k6"
 BINARY="k6"
 GIT_SERVER="github.com"
 REPO_URL="https://${GIT_SERVER}/${REPO_OWNER}/${REPO_NAME}"
 
-# Detect OS
-OS=$(uname | tr '[:upper:]' '[:lower:]')  # linux, darwin
+# === Logging helpers ===
+QUIET=false
 
-# Detect ARCH
+say() {
+  $QUIET || echo -e "$@"
+}
+
+err() {
+  echo -e "❌ $@" >&2
+}
+
+# === Parse CLI args ===
+TOOL_VERSION=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -v|--version)
+      TOOL_VERSION="$2"
+      shift 2
+      ;;
+    -q|--quiet)
+      QUIET=true
+      shift
+      ;;
+    -h|--help)
+      echo "Usage: $0 [--version <ver>] [--quiet]"
+      exit 0
+      ;;
+    *)
+      err "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+done
+
+# === Check requirements ===
+for cmd in sudo curl jq tar install; do
+  command -v $cmd >/dev/null 2>&1 || {
+    err "Required command '$cmd' not found."
+    exit 1
+  }
+done
+
+# === Sudo sanity check ===
+# Inform user if 'sudo' will prompt for a password (non-interactive check).
+# This is useful in CI or automation contexts to prevent unexpected hangs.
+if ! sudo -n true 2>/dev/null; then
+  say "🔐 'sudo' will prompt for a password during install."
+fi
+
+# === Detect OS and ARCH ===
+OS=$(uname | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 case "$ARCH" in
-    x86_64) ARCH="amd64" ;;
-    aarch64 | arm64) ARCH="arm64" ;;
-    armv6l | armv7l) ARCH="armv6" ;;  # fallback, rarely used
-    *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+  x86_64) ARCH="amd64" ;;
+  aarch64 | arm64) ARCH="arm64" ;;
+  armv6l | armv7l) ARCH="armv6" ;;
+  *) err "Unsupported architecture: $ARCH"; exit 1 ;;
 esac
 
-# Fetch latest version
-VERSION=$(curl -s https://api.${GIT_SERVER}/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
-  | jq -r ".tag_name" | sed 's/^v//')
+# === Determine version ===
+if [[ -z "$TOOL_VERSION" ]]; then
+  say "📦 Fetching latest version of $BINARY..."
+  TOOL_VERSION=$(curl --fail --silent --show-error --max-time 10 \
+    "https://api.${GIT_SERVER}/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest" \
+    | jq -r ".tag_name" | sed 's/^v//')
+  [[ -z "$TOOL_VERSION" ]] && err "Could not detect latest version." && exit 1
+fi
 
-# Construct filenames
-DIRNAME="${BINARY}-v${VERSION}-${OS}-${ARCH}"
+# === Prepare paths ===
+DIRNAME="${BINARY}-v${TOOL_VERSION}-${OS}-${ARCH}"
 PACKAGE="${DIRNAME}.tar.gz"
-
-# Download and install
-CWD=$(pwd)
 TEMPDIR=$(mktemp -d)
+CWD=$(pwd)
+
+cleanup() { rm -rf "$TEMPDIR"; }
+trap cleanup EXIT
+
+# === Download & install ===
 cd "$TEMPDIR"
-curl -fsSLO "${REPO_URL}/releases/download/v${VERSION}/${PACKAGE}"
-tar xf "${PACKAGE}"
-cd "${DIRNAME}"
-sudo install "${BINARY}" /usr/local/bin
+say "⬇️ Downloading $PACKAGE..."
+curl -fsSLO "${REPO_URL}/releases/download/v${TOOL_VERSION}/${PACKAGE}" \
+  || { err "Download failed."; exit 1; }
 
-# Clean up
-cd "$CWD"
-rm -rf "$TEMPDIR"
+say "📦 Extracting..."
+$QUIET && TAR_FLAGS="xf" || TAR_FLAGS="xvf"
+cd "$DIRNAME"
 
-# Report installed version
-echo -e "Installed $BINARY version: $($BINARY --version | cut -d' ' -f2)"
+say "🔧 Installing $BINARY to /usr/local/bin..."
+sudo install "$BINARY" /usr/local/bin
+
+VERSION_INSTALLED=$($BINARY --version | head -n1)
+$QUIET || echo ""
+echo "✅ Installed $BINARY version: $VERSION_INSTALLED"
 
