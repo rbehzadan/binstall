@@ -34,25 +34,46 @@ curl -fsSL https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/install.
 
 ### ✅ Option 2: Hardcoded Variant Snippets
 
-These are copy-paste-friendly, minimal install snippets that **do not rely on auto-detection**.
+These are copy-paste-friendly, minimal install snippets that **do not rely on auto-detection**.  
 Ideal for CI, Docker, or minimal systems.
 
 > 📁 Located in: [`k6/variants/`](./variants/)
 
-Available variants:
+#### 📄 Variant Scripts (GitHub UI Friendly)
 
-* [`install-k6-linux-amd64`](./variants/install-k6-linux-amd64)
-* [`install-k6-linux-arm64`](./variants/install-k6-linux-arm64)
-* [`install-k6-darwin-amd64`](./variants/install-k6-darwin-amd64)
-* [`install-k6-darwin-arm64`](./variants/install-k6-darwin-arm64)
+* [install-k6-linux-amd64](./variants/install-k6-linux-amd64)
+* [install-k6-linux-arm64](./variants/install-k6-linux-arm64)
+* [install-k6-darwin-amd64](./variants/install-k6-darwin-amd64)
+* [install-k6-darwin-arm64](./variants/install-k6-darwin-arm64)
 
-#### Example usage:
+#### 📥 Raw Links (Direct Copy-Paste)
+
+Use these one-liners if you're installing directly from this repo:
 
 ```bash
-bash < k6/variants/install-k6-linux-amd64
+curl -fsSL https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-linux-amd64 | bash
 ```
 
-Or copy the file contents and paste directly into your terminal.
+```bash
+curl -fsSL https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-linux-arm64 | bash
+```
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-darwin-amd64 | bash
+```
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-darwin-arm64 | bash
+```
+
+> 💡 Tip: If you’ve forked this repo, replace `rbehzadan` with your GitHub username in the links above.
+
+Or click to view the raw snippet and manually copy/paste into your terminal:
+
+* [install-k6-linux-amd64](https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-linux-amd64)
+* [install-k6-linux-arm64](https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-linux-arm64)
+* [install-k6-darwin-amd64](https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-darwin-amd64)
+* [install-k6-darwin-arm64](https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-darwin-arm64)
 
 ---
 
