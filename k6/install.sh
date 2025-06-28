@@ -105,7 +105,7 @@ fi
 say "🔧 Installing $BINARY to /usr/local/bin..."
 sudo install "$BINARY" /usr/local/bin
 
-VERSION_INSTALLED=$($BINARY --version | head -n1)
+VERSION_INSTALLED=$($BINARY --version | cut -d' ' -f2)
 $QUIET || echo ""
-echo "✅ Installed $BINARY version: $VERSION_INSTALLED"
+echo "✅ Installed $BINARY version $VERSION_INSTALLED"
 

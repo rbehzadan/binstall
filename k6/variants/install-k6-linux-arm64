@@ -17,4 +17,4 @@ cd "${DIRNAME}"
 sudo install "${BINARY}" /usr/local/bin
 cd "$CWD"
 rm -rf $TEMPDIR
-echo -e "\n\nInstalled $BINARY version: $($BINARY --version | cut -d' ' -f2)"
+echo -e "\n\nInstalled $BINARY version $($BINARY --version | cut -d' ' -f2)"

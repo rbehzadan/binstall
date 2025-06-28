@@ -66,14 +66,14 @@ curl -fsSL https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants
 curl -fsSL https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-darwin-arm64 | bash
 ```
 
-> 💡 Tip: If you’ve forked this repo, replace `rbehzadan` with your GitHub username in the links above.
-
 Or click to view the raw snippet and manually copy/paste into your terminal:
 
 * [install-k6-linux-amd64](https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-linux-amd64)
 * [install-k6-linux-arm64](https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-linux-arm64)
 * [install-k6-darwin-amd64](https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-darwin-amd64)
 * [install-k6-darwin-arm64](https://raw.githubusercontent.com/rbehzadan/binstall/main/k6/variants/install-k6-darwin-arm64)
+
+> 💡 Tip: If you’ve forked this repo, replace `rbehzadan` with your GitHub username in the links above.
 
 ---
 
@@ -82,7 +82,7 @@ Or click to view the raw snippet and manually copy/paste into your terminal:
 After installation, the script prints:
 
 ```bash
-✅ Installed k6 version: v0.48.0
+✅ Installed k6 version v0.48.0
 ```
 
 ---
