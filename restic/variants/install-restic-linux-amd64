@@ -1,0 +1,22 @@
+ARCH="amd64"
+OS="linux"
+REPO_OWNER="restic"
+REPO_NAME="restic"
+BINARY="restic"
+GIT_SERVER="github.com"
+REPO_URL="https://${GIT_SERVER}/${REPO_OWNER}/${REPO_NAME}"
+VERSION=$(curl -s https://api.${GIT_SERVER}/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest | jq -r ".tag_name" | sed 's/^v//')
+
+CWD=$(pwd)
+TEMPDIR=$(mktemp -d)
+cd "$TEMPDIR"
+
+curl -fsSL "${REPO_URL}/releases/download/v${VERSION}/${BINARY}_${VERSION}_${OS}_${ARCH}.bz2" | bunzip2 > "$BINARY"
+chmod +x "$BINARY"
+sudo install "$BINARY" /usr/local/bin
+
+cd "$CWD"
+rm -rf "$TEMPDIR"
+
+echo "Installed $BINARY version $($BINARY version | cut -d' ' -f2)"
+
